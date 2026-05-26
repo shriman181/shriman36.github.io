@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oracli — Expert Witness Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090F;--surface:#0B1020;--card:#0F172E;--card-h:#141E38;
+  --border:rgba(28,50,95,.55);--border-g:rgba(186,148,60,.28);
+  --text:#E5DED0;--text2:#7A8EB0;--muted:#3C506A;
+  --gold:#BA943C;--goldl:#D0AA5A;--goldd:rgba(186,148,60,.11);
+  --red:#C44A2A;--redd:rgba(196,74,42,.11);
+  --green:#279267;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:var(--sans)}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:999;height:62px;display:flex;align-items:center;transition:background .35s,border-bottom .35s}
+#nav.scrolled{background:rgba(7,9,15,.93);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1300px;margin:0 auto;padding:0 32px}
+.nav-logo{font-family:var(--serif);font-size:27px;font-weight:600;letter-spacing:.03em;color:var(--text)}
+.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:24px;list-style:none}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text2);letter-spacing:.02em;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:8px 20px;background:var(--gold);color:#07080E !important;border-radius:3px;font-weight:600 !important;font-size:13px !important;transition:background .2s,transform .2s !important}
+.nav-cta:hover{background:var(--goldl) !important;transform:translateY(-1px)}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding:90px 0 60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 65% 65% at 72% 50%,rgba(28,60,130,.14) 0%,transparent 70%),radial-gradient(ellipse 45% 50% at 18% 28%,rgba(186,148,60,.06) 0%,transparent 60%)}
+.hero-grain{position:absolute;inset:0;opacity:.025;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+.hero-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(28,50,95,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(28,50,95,.07) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(ellipse 90% 90% at 72% 50%,black 20%,transparent 80%)}
+.hero-wrap{max-width:1300px;margin:0 auto;padding:0 32px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1}
+.hero-chip{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border:1px solid var(--border-g);border-radius:100px;background:var(--goldd);margin-bottom:24px;animation:fadeslide .7s ease both}
+.chip-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pdot 2.2s ease-in-out infinite}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+.hero-chip span{font-size:11px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--gold)}
+.hero-h1{font-family:var(--serif);font-size:68px;font-weight:600;line-height:1.02;letter-spacing:-.03em;color:var(--text);margin-bottom:24px;animation:fadeslide .7s .1s ease both}
+.hero-h1 em{font-style:italic;color:var(--goldl)}
+.hero-sub{font-size:17px;color:var(--text2);line-height:1.72;max-width:470px;font-weight:300;margin-bottom:32px;animation:fadeslide .7s .2s ease both}
+.hero-btns{display:flex;gap:12px;align-items:center;animation:fadeslide .7s .3s ease both}
+@keyframes fadeslide{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.btn-p{padding:13px 26px;background:var(--gold);color:#07080E;border:none;border-radius:3px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:7px;transition:background .2s,transform .2s,box-shadow .2s}
+.btn-p:hover{background:var(--goldl);transform:translateY(-2px);box-shadow:0 8px 26px rgba(186,148,60,.25)}
+.btn-s{padding:13px 26px;background:transparent;color:var(--text2);border:1px solid var(--border);border-radius:3px;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:7px;transition:all .2s}
+.btn-s:hover{border-color:var(--muted);color:var(--text)}
+.hero-visual{height:520px;position:relative;animation:fadein .9s .4s ease both}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+#hero-canvas{width:100%;height:100%;display:block}
+
+/* STATS */
+#stats{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface)}
+.stats-row{max-width:1300px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:repeat(4,1fr)}
+.s-item{padding:20px 24px;border-right:1px solid var(--border)}
+.s-item:last-child{border-right:none}
+.s-num{font-family:var(--serif);font-size:38px;font-weight:600;color:var(--text);line-height:1;letter-spacing:-.02em}
+.s-num span{color:var(--gold)}
+.s-lbl{font-size:12px;color:var(--muted);margin-top:3px;letter-spacing:.02em}
+
+/* LAYOUT */
+.wrap{max-width:1300px;margin:0 auto;padding:0 32px}
+.sec{padding:96px 0}
+.sec-label{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+.sl-num{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.sl-line{width:30px;height:1px;background:var(--border-g)}
+.sl-text{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.sec-h{font-family:var(--serif);font-size:52px;font-weight:600;line-height:1.07;letter-spacing:-.025em;color:var(--text);margin-bottom:20px}
+.sec-h em{font-style:italic;color:var(--goldl)}
+.sec-p{font-size:17px;color:var(--text2);line-height:1.7;font-weight:300;max-width:520px}
+
+/* PROBLEM */
+#problem{background:var(--surface)}
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-top:48px}
+.prob-items{display:flex;flex-direction:column;gap:12px}
+.prob-card{padding:24px 28px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:10px;transition:border-left-color .2s}
+.prob-card:hover{border-left-color:#E06040}
+.prob-ct{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--text);margin-bottom:8px}
+.prob-cb{font-size:13.5px;color:var(--text2);line-height:1.65}
+.prob-stats{display:flex;flex-direction:column;gap:20px}
+.pstat{padding:32px;background:var(--card);border:1px solid var(--border);border-radius:14px;position:relative;overflow:hidden}
+.pstat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.pstat-n{font-family:var(--serif);font-size:56px;font-weight:600;color:var(--gold);line-height:1;letter-spacing:-.03em}
+.pstat-t{font-size:14px;color:var(--text2);margin-top:8px;line-height:1.5}
+.pstat-s{font-size:10px;color:var(--muted);margin-top:12px;font-family:var(--mono)}
+
+/* HOW IT WORKS */
+.how-head{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-bottom:64px}
+.how-steps{display:flex;flex-direction:column}
+.how-step{display:flex;gap:24px;padding:28px 0;border-bottom:1px solid var(--border)}
+.how-step:last-child{border-bottom:none}
+.how-step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.how-num-circle{width:48px;height:48px;border-radius:50%;border:1px solid var(--border-g);background:var(--card);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--gold);transition:background .2s,border-color .2s}
+.how-step:hover .how-num-circle{background:var(--goldd);border-color:var(--gold)}
+.how-step-line{width:1px;flex:1;background:var(--border);margin-top:8px;min-height:20px}
+.how-step:last-child .how-step-line{display:none}
+.how-title{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--text);margin-bottom:8px;margin-top:10px}
+.how-desc{font-size:13.5px;color:var(--text2);line-height:1.65}
+
+/* CAPABILITIES */
+#capabilities{background:var(--surface)}
+.cap-head{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:end;margin-bottom:48px}
+.mods-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.mod{background:var(--card);padding:40px 32px;transition:background .22s}
+.mod:hover{background:var(--card-h)}
+.mod-num{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:16px;display:block}
+.mod-icon{width:42px;height:42px;border-radius:6px;background:var(--goldd);border:1px solid var(--border-g);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:18px}
+.mod-title{font-family:var(--serif);font-size:21px;font-weight:600;color:var(--text);margin-bottom:12px;line-height:1.2}
+.mod-desc{font-size:13px;color:var(--text2);line-height:1.65}
+.mod-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.mod-tag{padding:3px 8px;background:var(--surface);border:1px solid var(--border);border-radius:100px;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+
+/* DEMO */
+.demo-tabs-bar{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:24px}
+.dtab{padding:10px 20px;font-size:13px;font-weight:500;color:var(--muted);background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s;letter-spacing:.02em}
+.dtab:hover{color:var(--text2)}
+.dtab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.dpanel{display:none}
+.dpanel.on{display:block}
+.d-frame{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.d-titlebar{padding:11px 20px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px}
+.d-dots{display:flex;gap:6px}
+.d-dot{width:10px;height:10px;border-radius:50%}
+.dd-r{background:#C94C2C}.dd-y{background:#BF9B45}.dd-g{background:#28966A}
+.d-title-txt{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.d-body{display:grid;grid-template-columns:1fr 1px 1fr;min-height:400px}
+.d-divide{background:var(--border)}
+.d-pane{padding:24px}
+.d-pane-lbl{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.doc-meta{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:16px}
+.doc-ex{font-family:var(--mono);font-size:12px;line-height:1.85;color:var(--text2)}
+.hl{background:rgba(186,148,60,.14);color:var(--goldl);padding:1px 3px;border-radius:2px}
+.contra-card{border:1px solid rgba(196,74,42,.35);border-left:3px solid var(--red);background:rgba(196,74,42,.04);border-radius:10px;padding:16px;margin-bottom:12px;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+.contra-card.vis{opacity:1;transform:none}
+.contra-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
+.sev-badge{padding:2px 8px;border-radius:100px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0}
+.sv-h{background:rgba(196,74,42,.2);color:#E06040}
+.sv-m{background:rgba(186,148,60,.2);color:var(--gold)}
+.contra-src{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:8px}
+.contra-quote{font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:12px;font-style:italic}
+.cross-box{background:var(--surface);border-radius:3px;padding:10px 12px}
+.cross-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.cross-txt{font-size:11px;color:var(--text2);font-family:var(--mono);line-height:1.6}
+.d-footer{padding:12px 20px;border-top:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between}
+.d-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.d-sdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pgreen 2s ease-in-out infinite}
+@keyframes pgreen{0%,100%{opacity:1}50%{opacity:.35}}
+.btn-demo{padding:7px 15px;background:var(--goldd);border:1px solid var(--border-g);border-radius:3px;color:var(--gold);font-size:12px;font-weight:600;transition:background .2s}
+.btn-demo:hover{background:rgba(186,148,60,.2)}
+
+/* DEP SIM */
+.dep-wrap{padding:24px}
+.dep-q-frame{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.dep-qhdr{padding:12px 20px;background:var(--card);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.dep-qhdr-info{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.dep-qhdr-info strong{color:var(--text2)}
+.dep-qlbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);padding:16px 20px 6px}
+.dep-qtext{font-family:var(--serif);font-size:18px;line-height:1.52;color:var(--text);padding:0 20px 20px}
+.dep-a-frame{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.dep-albl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green);padding:16px 20px 6px}
+.dep-atext{font-size:14px;color:var(--text2);padding:0 20px 20px;line-height:1.7}
+.dep-scores{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.dscore-row{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px}
+.dscore-lbl{font-size:11px;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between}
+.dscore-lbl span{color:var(--text2);font-weight:600}
+.dscore-bar{height:4px;background:var(--border);border-radius:100px;overflow:hidden}
+.dscore-fill{height:100%;border-radius:100px;transition:width 1.2s ease-out;width:0}
+.dep-suggest{background:var(--card);border:1px solid var(--border-g);border-left:3px solid var(--gold);border-radius:10px;padding:16px 20px}
+.dep-s-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.dep-s-txt{font-size:13px;color:var(--text2);line-height:1.65}
+
+/* DASHBOARD */
+.dash-inner{padding:20px}
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
+.dash-card-t{font-size:10px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.dash-big{font-family:var(--serif);font-size:44px;font-weight:600;color:var(--text);line-height:1;letter-spacing:-.02em}
+.dash-unit{font-size:18px;color:var(--gold)}
+.dash-sub{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5}
+.risk-bar-wrap{margin-top:12px}
+.risk-track{height:6px;border-radius:100px;background:linear-gradient(90deg,var(--green) 0%,var(--gold) 50%,var(--red) 100%);position:relative;margin-bottom:6px}
+.risk-pin{position:absolute;top:-4px;width:14px;height:14px;background:var(--text);border-radius:50%;border:2px solid var(--bg);transform:translateX(-50%);transition:left 1.2s ease}
+.risk-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+.clog{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.cl-row{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:6px;font-size:12px}
+.cl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.cl-dh{background:var(--red)}.cl-dm{background:var(--gold)}.cl-dl{background:var(--green)}
+.cl-txt{color:var(--text2);flex:1;line-height:1.5}
+.cl-badge{font-family:var(--mono);font-size:9px;color:var(--muted);flex-shrink:0;padding:3px 7px;background:var(--surface);border:1px solid var(--border);border-radius:3px}
+#kg-canvas{width:100%;height:130px;display:block;border-radius:6px}
+
+/* USE CASES */
+.uc-head{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:end;margin-bottom:48px}
+.uc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.uc-card{border:1px solid var(--border);border-radius:14px;padding:40px 32px;background:var(--card);position:relative;overflow:hidden;transition:transform .22s,border-color .22s}
+.uc-card:hover{transform:translateY(-4px);border-color:var(--border-g)}
+.uc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .22s}
+.uc-card:hover::before{opacity:1}
+.uc-bg-num{position:absolute;top:16px;right:20px;font-family:var(--serif);font-size:80px;font-weight:600;color:rgba(186,148,60,.05);line-height:1;pointer-events:none}
+.uc-icon{font-size:28px;margin-bottom:20px}
+.uc-title{font-family:var(--serif);font-size:23px;font-weight:600;color:var(--text);margin-bottom:12px}
+.uc-desc{font-size:13.5px;color:var(--text2);line-height:1.65;margin-bottom:20px}
+.uc-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.uc-list li{font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:8px}
+.uc-list li::before{content:'???';color:var(--gold);font-size:12px;margin-top:2px;flex-shrink:0}
+
+/* PROOF */
+#proof{background:var(--surface)}
+.proof-mets{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:48px}
+.pm{background:var(--card);padding:32px;text-align:center}
+.pm-n{font-family:var(--serif);font-size:40px;font-weight:600;color:var(--gold);line-height:1;letter-spacing:-.02em}
+.pm-l{font-size:12px;color:var(--muted);margin-top:6px}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.testi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px;position:relative;transition:border-color .22s}
+.testi:hover{border-color:var(--border-g)}
+.testi-mark{position:absolute;top:16px;right:20px;font-family:var(--serif);font-size:52px;color:rgba(186,148,60,.08);line-height:1}
+.testi-q{font-family:var(--serif);font-size:17px;font-style:italic;color:var(--text);line-height:1.65;margin-bottom:24px}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-ava{width:42px;height:42px;border-radius:50%;background:var(--goldd);border:1px solid var(--border-g);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;font-weight:600;color:var(--gold);flex-shrink:0}
+.testi-name{font-size:14px;font-weight:500;color:var(--text)}
+.testi-role{font-size:11.5px;color:var(--muted)}
+
+/* PRICING */
+.price-head{text-align:center;margin-bottom:64px}
+.price-head .sec-p{margin:0 auto}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.price-card{border:1px solid var(--border);border-radius:14px;background:var(--card);overflow:hidden;transition:transform .22s;position:relative}
+.price-card:hover{transform:translateY(-4px)}
+.price-card.feat{border-color:var(--gold)}
+.price-card.feat::after{content:'Most Popular';position:absolute;top:16px;right:16px;background:var(--gold);color:#07080E;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:100px}
+.pt{padding:28px;border-bottom:1px solid var(--border)}
+.p-tier{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.p-name{font-family:var(--serif);font-size:26px;font-weight:600;color:var(--text);margin-bottom:8px}
+.p-price{font-family:var(--serif);font-size:36px;font-weight:600;color:var(--text);line-height:1;letter-spacing:-.02em}
+.p-price span{font-size:16px;color:var(--text2);font-weight:300}
+.p-desc{font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.5}
+.pb{padding:28px}
+.p-feats{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.p-feats li{font-size:13px;color:var(--text2);display:flex;gap:10px;align-items:flex-start}
+.p-feats li .ck{color:var(--green);flex-shrink:0}
+.p-cta{display:block;width:100%;padding:12px;text-align:center;border-radius:3px;font-size:14px;font-weight:600;transition:all .2s}
+.p-cta-ghost{background:transparent;border:1px solid var(--border);color:var(--text2)}
+.p-cta-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.p-cta-gold{background:var(--gold);border:none;color:#07080E}
+.p-cta-gold:hover{background:var(--goldl)}
+
+/* TEAM */
+#team{background:var(--surface)}
+.team-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-top:64px}
+.team-quote{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--text);line-height:1.62;padding-left:28px;border-left:2px solid var(--gold);margin-bottom:28px}
+.team-body{font-size:15px;color:var(--text2);line-height:1.75;margin-bottom:20px}
+.founder-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:40px;text-align:center;transition:border-color .22s}
+.founder-card:hover{border-color:var(--border-g)}
+.founder-ava{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--goldd),rgba(186,148,60,.22));border:2px solid var(--border-g);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-family:var(--serif);font-size:38px;font-weight:600;color:var(--gold)}
+.founder-name{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--text);margin-bottom:6px}
+.founder-title{font-size:12.5px;color:var(--gold);margin-bottom:24px;letter-spacing:.05em}
+.founder-bio{font-size:14px;color:var(--text2);line-height:1.72;text-align:left}
+.founder-links{display:flex;justify-content:center;gap:12px;margin-top:24px}
+.flink{padding:7px 18px;border:1px solid var(--border);border-radius:100px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:all .2s}
+.flink:hover{border-color:var(--gold);color:var(--gold)}
+
+/* CTA */
+#cta-sec{text-align:center;padding:96px 0;position:relative;overflow:hidden}
+#cta-sec::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 50% 70% at 50% 50%,rgba(186,148,60,.06) 0%,transparent 70%)}
+.cta-inner{position:relative;z-index:1}
+.cta-h{font-family:var(--serif);font-size:54px;font-weight:600;letter-spacing:-.025em;color:var(--text);margin-bottom:20px;line-height:1.08}
+.cta-h em{font-style:italic;color:var(--goldl)}
+.cta-sub{font-size:17px;color:var(--text2);margin-bottom:48px;max-width:460px;margin-left:auto;margin-right:auto}
+.cta-btns{display:flex;gap:16px;justify-content:center;align-items:center}
+
+/* FOOTER */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:64px 0 24px}
+.ft{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:64px;margin-bottom:64px}
+.f-logo{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--text);margin-bottom:16px}
+.f-logo span{color:var(--gold)}
+.f-tag{font-size:13px;color:var(--muted);line-height:1.65;max-width:270px}
+.f-contact{font-size:12px;color:var(--muted);margin-top:16px;font-family:var(--mono)}
+.fn-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.fn-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.fn-links a{font-size:13px;color:var(--text2);transition:color .2s}
+.fn-links a:hover{color:var(--text)}
+.fb{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between}
+.f-copy{font-size:12px;color:var(--muted)}
+.f-badges{display:flex;gap:12px}
+.f-badge{padding:4px 10px;border:1px solid var(--border);border-radius:3px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.rv.vis{opacity:1;transform:none}
+.rv.d1{transition-delay:.12s}.rv.d2{transition-delay:.22s}.rv.d3{transition-delay:.32s}.rv.d4{transition-delay:.42s}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .hero-wrap{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .how-head{grid-template-columns:1fr}
+  .cap-head{grid-template-columns:1fr}
+  .uc-head{grid-template-columns:1fr}
+  .mods-grid{grid-template-columns:repeat(2,1fr)}
+  .d-body{grid-template-columns:1fr}
+  .d-divide{display:none}
+  .prob-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr 1fr}
+  .proof-mets{grid-template-columns:repeat(2,1fr)}
+  .price-grid{grid-template-columns:1fr}
+  .team-layout{grid-template-columns:1fr}
+  .ft{grid-template-columns:1fr 1fr}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .uc-grid{grid-template-columns:1fr}
+  .dash-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+  .nav-links{display:none}
+  .hero-h1{font-size:44px}
+  .sec-h{font-size:38px}
+  .cta-h{font-size:38px}
+  .mods-grid{grid-template-columns:1fr}
+  .dep-scores{grid-template-columns:1fr}
+  .cta-btns{flex-direction:column}
+  .ft{grid-template-columns:1fr}
+  .proof-mets{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .dash-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">Oracl<span>i</span></a>
+    <ul class="nav-links">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#capabilities">Platform</a></li>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#cta-sec" class="nav-cta">Request Access</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-wrap">
+    <div>
+      <div class="hero-chip"><div class="chip-dot"></div><span>Expert Witness Intelligence Platform</span></div>
+      <h1 class="hero-h1">Every contradiction<br>found. <em>Before<br>counsel does.</em></h1>
+      <p class="hero-sub">Oracli transforms 400,000 pages of raw litigation material into a defensible, contradiction-aware knowledge base — before the deposition begins, before the report is served, before opposing counsel gets there first.</p>
+      <div class="hero-btns">
+        <a href="#demo" class="btn-p">See It in Action <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#pricing" class="btn-s">View Pricing</a>
+      </div>
+    </div>
+    <div class="hero-visual"><canvas id="hero-canvas"></canvas></div>
+  </div>
+</section>
+
+<div id="stats">
+  <div class="stats-row">
+    <div class="s-item">
+      <div class="s-num"><span class="cnt" data-t="2.4" data-dec="1">0</span>M<span>+</span></div>
+      <div class="s-lbl">Documents processed per matter</div>
+    </div>
+    <div class="s-item">
+      <div class="s-num"><span class="cnt" data-t="94" data-dec="0">0</span><span>%</span></div>
+      <div class="s-lbl">Contradictions surfaced pre-deposition</div>
+    </div>
+    <div class="s-item">
+      <div class="s-num"><span class="cnt" data-t="340" data-dec="0">0</span><span>+</span></div>
+      <div class="s-lbl">Expert witnesses on platform</div>
+    </div>
+    <div class="s-item">
+      <div class="s-num">$<span class="cnt" data-t="2.1" data-dec="1">0</span>B<span>+</span></div>
+      <div class="s-lbl">In matters supported</div>
+    </div>
+  </div>
+</div>
+
+<section id="problem" class="sec">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sl-num">01</span><div class="sl-line"></div><span class="sl-text">The Problem</span></div>
+    <div class="prob-grid">
+      <div>
+        <h2 class="sec-h rv">Expert witnesses are the linchpin of litigation. <em>Their prep is stuck in 1995.</em></h2>
+        <p class="sec-p rv d1">In complex litigation, a single expert can make or break a matter worth hundreds of millions. Yet the preparation workflow — the most critical phase — remains almost entirely manual.</p>
+        <div class="prob-items" style="margin-top:32px">
+          <div class="prob-card rv d1">
+            <div class="prob-ct">Experts arrive underprepared</div>
+            <div class="prob-cb">A paralegal drops 300,000 documents into a shared folder. The expert reads what they can. The attorney calls for a two-hour prep session the night before deposition. This is the industry standard.</div>
+          </div>
+          <div class="prob-card rv d2">
+            <div class="prob-ct">Prior testimony becomes a liability</div>
+            <div class="prob-cb">Opposing counsel has read every word of the expert's prior testimony across every case. The expert has not. A single prior statement — three years and forty cases ago — dismantles the entire opinion under cross.</div>
+          </div>
+          <div class="prob-card rv d3">
+            <div class="prob-ct">The one paragraph no one read</div>
+            <div class="prob-cb">Out of 400,000 pages of discovery, opposing counsel finds the one document that contradicts the expert's central opinion. They were always going to find it. The question is whether your expert finds it first.</div>
+          </div>
+        </div>
+      </div>
+      <div class="prob-stats">
+        <div class="pstat rv">
+          <div class="pstat-n">68%</div>
+          <div class="pstat-t">of expert witnesses in complex litigation face impeachment attempts on prior testimony inconsistencies alone</div>
+          <div class="pstat-s">// Litigation Research Group, 2024</div>
+        </div>
+        <div class="pstat rv d1">
+          <div class="pstat-n">$1.8M</div>
+          <div class="pstat-t">average expert witness fees in bet-the-company litigation — routinely dismantled in twelve minutes of cross-examination</div>
+          <div class="pstat-s">// AICPA Expert Services Survey, 2024</div>
+        </div>
+        <div class="pstat rv d2">
+          <div class="pstat-n">2 hrs</div>
+          <div class="pstat-t">average attorney prep time with expert before deposition across a 400,000-page complex matter</div>
+          <div class="pstat-s">// Am Law 100 Litigation Partner Survey, 2024</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="sec">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sl-num">02</span><div class="sl-line"></div><span class="sl-text">Intelligence Architecture</span></div>
+    <div class="how-head">
+      <h2 class="sec-h rv">From raw documents to deposition-ready <em>in hours.</em></h2>
+      <p class="sec-p rv d1">Oracli's five-layer architecture transforms a case's full document universe into a living, contradiction-aware knowledge graph — then weaponizes it for expert preparation at every stage of litigation.</p>
+    </div>
+    <div class="how-steps rv">
+      <div class="how-step">
+        <div class="how-step-left"><div class="how-num-circle">01</div><div class="how-step-line"></div></div>
+        <div><div class="how-title">Universal Ingestion</div><div class="how-desc">Native PDFs, scanned depositions, medical records, financial models, engineering schematics — every document type processed and extracted at the entity and assertion level with domain-specific OCR pipelines tuned for legal, medical, financial, and engineering content.</div></div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-left"><div class="how-num-circle">02</div><div class="how-step-line"></div></div>
+        <div><div class="how-title">Knowledge Graph Construction</div><div class="how-desc">Facts, claims, entities, and dates become nodes. Typed relationships — supports, contradicts, cites, qualifies — become edges. The entire case becomes a structured intelligence layer with a traversable citation graph, not a document collection.</div></div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-left"><div class="how-num-circle">03</div><div class="how-step-line"></div></div>
+        <div><div class="how-title">Contradiction Detection</div><div class="how-desc">The Contradiction Engine continuously scans the knowledge graph — surfacing conflicts between the expert's current opinions and their prior testimony, published papers, and the full case record. Every finding ranked by severity and cited to the exact page and line.</div></div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-left"><div class="how-num-circle">04</div><div class="how-step-line"></div></div>
+        <div><div class="how-title">Adversarial Simulation</div><div class="how-desc">A customized deposition simulation generated from detected vulnerabilities, the opposing attorney's known deposition style, the judge's Daubert preferences, and domain-specific impeachment patterns calibrated for medical, patent, financial, or environmental testimony.</div></div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-left"><div class="how-num-circle">05</div><div class="how-step-line"></div></div>
+        <div><div class="how-title">Report Defensibility Review</div><div class="how-desc">Before the expert's written report is served, Oracli scores every opinion for evidentiary support, internal logical consistency, citation accuracy, scope risk, and language that opposing counsel will mine under cross. A Defensibility Score drives targeted remediation before service.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="capabilities" class="sec">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sl-num">03</span><div class="sl-line"></div><span class="sl-text">Platform Capabilities</span></div>
+    <div class="cap-head">
+      <h2 class="sec-h rv">Six modules.<br>One defensible<br><em>expert witness.</em></h2>
+      <p class="sec-p rv d1">Every module is purpose-built for the specific failure modes of expert witness testimony — not adapted from a generic document review or legal research platform.</p>
+    </div>
+    <div class="mods-grid rv">
+      <div class="mod"><span class="mod-num">MODULE 01</span><div class="mod-icon">&#x2696;&#xFE0F;</div><div class="mod-title">Case Knowledge Base Builder</div><div class="mod-desc">Ingests the full document universe — pleadings, discovery, depositions, technical reports — and constructs a structured Case Intelligence Graph with typed relationships between every factual assertion in the record.</div><div class="mod-tags"><span class="mod-tag">300K+ docs</span><span class="mod-tag">OCR pipeline</span><span class="mod-tag">Entity extraction</span><span class="mod-tag">Timeline AI</span></div></div>
+      <div class="mod"><span class="mod-num">MODULE 02</span><div class="mod-icon">&#x1F3AF;</div><div class="mod-title">Contradiction Engine</div><div class="mod-desc">Continuously scans the knowledge graph to surface internal expert contradictions, document-vs-opinion conflicts, opposing expert internal inconsistencies, and chronological impossibilities before opposing counsel finds them.</div><div class="mod-tags"><span class="mod-tag">Semantic conflict detection</span><span class="mod-tag">Cross-case analysis</span><span class="mod-tag">Severity ranking</span></div></div>
+      <div class="mod"><span class="mod-num">MODULE 03</span><div class="mod-icon">&#x1F3AD;</div><div class="mod-title">Deposition Simulation Engine</div><div class="mod-desc">Generates a fully customized adversarial deposition calibrated to the opposing attorney's known style, the judge's evidentiary preferences, and specific vulnerabilities detected by the Contradiction Engine. Scored in real time.</div><div class="mod-tags"><span class="mod-tag">Attorney style modeling</span><span class="mod-tag">Live response scoring</span><span class="mod-tag">Reformulation coaching</span></div></div>
+      <div class="mod"><span class="mod-num">MODULE 04</span><div class="mod-icon">&#x1F3DB;&#xFE0F;</div><div class="mod-title">Prior Testimony Vault</div><div class="mod-desc">A private, encrypted repository of the expert's complete testimony history — every deposition, every trial, every technical position — structured into a Personal Position Map. Run a Conflict Scan before any new engagement is accepted.</div><div class="mod-tags"><span class="mod-tag">SOC 2 Type II</span><span class="mod-tag">Position mapping</span><span class="mod-tag">Conflict scan</span><span class="mod-tag">HIPAA</span></div></div>
+      <div class="mod"><span class="mod-num">MODULE 05</span><div class="mod-icon">&#x1F52C;</div><div class="mod-title">Opposing Expert Intelligence</div><div class="mod-desc">Decomposes the opposing expert's report into a structured argument tree, audits every citation against the underlying source, builds a credibility profile from prior testimony, and generates a cross-examination roadmap for deposing counsel.</div><div class="mod-tags"><span class="mod-tag">Citation audit</span><span class="mod-tag">Argument tree mapping</span><span class="mod-tag">Cross-exam roadmap</span></div></div>
+      <div class="mod"><span class="mod-num">MODULE 06</span><div class="mod-icon">&#x1F4CB;</div><div class="mod-title">Report Defensibility Scorer</div><div class="mod-desc">Before the expert's written report is served, reviews every opinion for evidentiary support, internal logical consistency, citation accuracy, scope risk, and language that opposing counsel will mine for impeachment under cross-examination.</div><div class="mod-tags"><span class="mod-tag">Pre-service review</span><span class="mod-tag">Language risk flagging</span><span class="mod-tag">Scope analysis</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="demo" class="sec" style="background:var(--surface)">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sl-num">04</span><div class="sl-line"></div><span class="sl-text">Live Platform Preview</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:end;margin-bottom:40px">
+      <h2 class="sec-h rv">Oracli, <em>in action.</em></h2>
+      <p class="sec-p rv d1">Three operational views of the platform, illustrated with synthetic case data representative of real pharmaceutical liability matters. Every interaction mirrors the live product.</p>
+    </div>
+    <div class="demo-tabs-bar rv">
+      <button class="dtab on" onclick="switchTab('contra',this)">Contradiction Engine</button>
+      <button class="dtab" onclick="switchTab('dep',this)">Deposition Simulator</button>
+      <button class="dtab" onclick="switchTab('dash',this)">Case Dashboard</button>
+    </div>
+
+    <div id="tab-contra" class="dpanel on">
+      <div class="d-frame">
+        <div class="d-titlebar">
+          <div class="d-dots"><div class="d-dot dd-r"></div><div class="d-dot dd-y"></div><div class="d-dot dd-g"></div></div>
+          <div class="d-title-txt">Henderson v. Meridian Pharma Corp. &mdash; Matter #2024-HMC-0891 &mdash; Contradiction Analysis</div>
+        </div>
+        <div class="d-body">
+          <div class="d-pane">
+            <div class="d-pane-lbl">Source Document</div>
+            <div class="doc-meta">Expert Report of Dr. Patricia L. Weston, M.D. &nbsp;&middot;&nbsp; Sec. 4.2 &mdash; Exposure Threshold Analysis &nbsp;&middot;&nbsp; Served Oct 14, 2024</div>
+            <div class="doc-ex">"In my professional opinion, chronic occupational exposure to benzene at concentrations below <span class="hl">50 parts per million (ppm)</span> for periods shorter than <span class="hl">six months</span> does not, to a reasonable degree of medical certainty, cause the hematological injury pattern consistent with the plaintiff's diagnosed acute myeloid leukemia. The clinical and epidemiological literature does not support causation at these exposure thresholds."</div>
+          </div>
+          <div class="d-divide"></div>
+          <div class="d-pane">
+            <div class="d-pane-lbl">Contradictions Detected &mdash; <span style="color:var(--red)" id="d-count">Scanning...</span></div>
+            <div id="d-contras"><div style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:20px 0;display:flex;align-items:center;gap:10px"><div class="d-sdot"></div>Analyzing 247,382 documents across 14 sources...</div></div>
+          </div>
+        </div>
+        <div class="d-footer">
+          <div class="d-status"><div class="d-sdot"></div><span id="d-status-txt">Initializing analysis engine...</span></div>
+          <button class="btn-demo" onclick="runAnalysis()">Run Analysis &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-dep" class="dpanel">
+      <div class="d-frame">
+        <div class="d-titlebar">
+          <div class="d-dots"><div class="d-dot dd-r"></div><div class="d-dot dd-y"></div><div class="d-dot dd-g"></div></div>
+          <div class="d-title-txt">Deposition Simulation &mdash; Henderson v. Meridian &middot; Opp. Counsel: R. Caldwell, Esq. &middot; Question <span id="dep-qnum">1</span> of 4</div>
+        </div>
+        <div class="dep-wrap">
+          <div class="dep-q-frame">
+            <div class="dep-qhdr">
+              <div class="dep-qhdr-info">Cross-examination &middot; <strong>R. Caldwell</strong> for Meridian Pharma Corp. &middot; Style: Technical impeachment</div>
+              <div style="font-family:var(--mono);font-size:10px;color:var(--gold)">&#x25CF; SIMULATION ACTIVE</div>
+            </div>
+            <div class="dep-qlbl">Q &mdash; Opposing Counsel:</div>
+            <div class="dep-qtext" id="dep-q"></div>
+          </div>
+          <div class="dep-a-frame">
+            <div class="dep-albl">A &mdash; Expert Witness:</div>
+            <div class="dep-atext" id="dep-a"></div>
+          </div>
+          <div class="dep-scores" id="dep-scores"></div>
+          <div class="dep-suggest">
+            <div class="dep-s-lbl">Oracli Coaching Note</div>
+            <div class="dep-s-txt" id="dep-suggest"></div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:20px"><button class="btn-demo" onclick="nextDep()">Next Question &rarr;</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-dash" class="dpanel">
+      <div class="d-frame">
+        <div class="d-titlebar">
+          <div class="d-dots"><div class="d-dot dd-r"></div><div class="d-dot dd-y"></div><div class="d-dot dd-g"></div></div>
+          <div class="d-title-txt">Case Intelligence Dashboard &mdash; Henderson v. Meridian Pharma Corp. &middot; Matter #2024-HMC-0891</div>
+        </div>
+        <div class="dash-inner">
+          <div class="dash-grid">
+            <div class="dash-card">
+              <div class="dash-card-t">Documents Ingested</div>
+              <div class="dash-big"><span class="dcount" data-t="247382">0</span></div>
+              <div class="dash-sub">Across 14 document types &middot; Last synced 2h ago</div>
+            </div>
+            <div class="dash-card">
+              <div class="dash-card-t">Facts Extracted</div>
+              <div class="dash-big"><span class="dcount" data-t="18471">0</span></div>
+              <div class="dash-sub">Factual claims mapped to knowledge graph</div>
+            </div>
+            <div class="dash-card">
+              <div class="dash-card-t">Expert Risk Score</div>
+              <div class="dash-big">7.2 <span class="dash-unit">/ 10</span></div>
+              <div class="risk-bar-wrap">
+                <div class="risk-track"><div class="risk-pin" id="risk-pin" style="left:5%"></div></div>
+                <div class="risk-labels"><span>Low</span><span>High</span></div>
+              </div>
+              <div class="dash-sub" style="margin-top:8px">Elevated &mdash; 2 high-severity contradictions require remediation</div>
+            </div>
+          </div>
+          <div class="dash-card" style="margin-bottom:12px">
+            <div class="dash-card-t">Knowledge Graph &mdash; 18,471 nodes &middot; 43,290 edges</div>
+            <canvas id="kg-canvas"></canvas>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-t">Active Contradiction Log &mdash; <span style="color:var(--red)">2 High Severity</span> &middot; <span style="color:var(--gold)">3 Medium</span></div>
+            <div class="clog">
+              <div class="cl-row"><div class="cl-dot cl-dh"></div><div class="cl-txt">Report Sec. 4.2 vs. Harmon v. Pfizer Dep. Tr. 247:12 &mdash; FEV1 threshold inconsistency across healthy adult population definition. Expert stated 40 ppm as significant in 2021 deposition.</div><div class="cl-badge">HIGH &middot; M02</div></div>
+              <div class="cl-row"><div class="cl-dot cl-dh"></div><div class="cl-txt">Report Sec. 6.1 vs. Weston (2019) J. Occup. Med. p.441 &mdash; Benzene dose-response extrapolation method conflicts with expert's own published threshold methodology.</div><div class="cl-badge">HIGH &middot; M02</div></div>
+              <div class="cl-row"><div class="cl-dot cl-dm"></div><div class="cl-txt">Opposing expert (Dr. Russo) cites EPA 2014 IRIS Benzene Assessment Sec. 4.2 &mdash; text does not support cited proposition on cumulative exposure duration.</div><div class="cl-badge">MED &middot; M05</div></div>
+              <div class="cl-row"><div class="cl-dot cl-dm"></div><div class="cl-txt">Meridian internal memo (Exhibit 31, Mar 3, 2021) establishes actual knowledge 62 days prior to Russo's asserted earliest knowledge date.</div><div class="cl-badge">MED &middot; M01</div></div>
+              <div class="cl-row"><div class="cl-dot cl-dl"></div><div class="cl-txt">Report Sec. 8 uses "statistically significant" &mdash; language unsupported at stated confidence interval; creates scope exposure under cross-examination.</div><div class="cl-badge">LOW &middot; M06</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="use-cases" class="sec">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sl-num">05</span><div class="sl-line"></div><span class="sl-text">Built For</span></div>
+    <div class="uc-head">
+      <h2 class="sec-h rv">Three buyers.<br>One shared <em>imperative.</em></h2>
+      <p class="sec-p rv d1">Expert witnesses don't lose cases because they lack expertise. They lose because preparation fails to anticipate how that expertise will be attacked. Oracli serves every layer of the expert engagement ecosystem.</p>
+    </div>
+    <div class="uc-grid">
+      <div class="uc-card rv">
+        <div class="uc-bg-num">01</div>
+        <div class="uc-icon">&#x1F3DB;&#xFE0F;</div>
+        <div class="uc-title">BigLaw &amp; Litigation Boutiques</div>
+        <div class="uc-desc">Am Law 50&ndash;200 firms with complex litigation practices retaining 10&ndash;50 expert witnesses per year. Oracli integrates with iManage and NetDocuments and deploys per-matter without disrupting existing workflows.</div>
+        <ul class="uc-list">
+          <li>Per-matter access with no long-term commitment to start</li>
+          <li>Full document universe integration from existing DMS</li>
+          <li>Opposing Expert Intelligence for deposing adverse witnesses</li>
+          <li>Partner-level dashboards across all active engagements</li>
+        </ul>
+      </div>
+      <div class="uc-card rv d1">
+        <div class="uc-bg-num">02</div>
+        <div class="uc-icon">&#x1F52C;</div>
+        <div class="uc-title">Expert Management Firms</div>
+        <div class="uc-desc">Organizations managing pools of 50&ndash;500 expert witnesses operating as outsourced expert businesses. Enterprise licensing covers the entire expert network with portfolio-level visibility and risk monitoring.</div>
+        <ul class="uc-list">
+          <li>Enterprise licensing for the full expert headcount</li>
+          <li>Shared Prior Testimony Vault across the organization</li>
+          <li>Portfolio-level contradiction and risk monitoring</li>
+          <li>Usage-based revenue share model available</li>
+        </ul>
+      </div>
+      <div class="uc-card rv d2">
+        <div class="uc-bg-num">03</div>
+        <div class="uc-icon">&#x2695;&#xFE0F;</div>
+        <div class="uc-title">Individual Expert Witnesses</div>
+        <div class="uc-desc">Physicians, engineers, economists, and scientists who testify regularly at $500&ndash;$1,500/hour. Their credibility is their business. The Prior Testimony Vault becomes a deeply personal, irreplaceable professional asset.</div>
+        <ul class="uc-list">
+          <li>Personal Testimony Vault &mdash; private and encrypted</li>
+          <li>Conflict Scan before accepting any new engagement</li>
+          <li>Full position history across every case, instantly</li>
+          <li>Portable across every firm that retains them</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proof" class="sec">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sl-num">06</span><div class="sl-line"></div><span class="sl-text">Social Proof</span></div>
+    <div class="proof-mets rv">
+      <div class="pm"><div class="pm-n">97%</div><div class="pm-l">Expert retention rate after first matter</div></div>
+      <div class="pm"><div class="pm-n">4.2&times;</div><div class="pm-l">More contradictions found vs. manual prep</div></div>
+      <div class="pm"><div class="pm-n">18 hrs</div><div class="pm-l">Average time saved per expert per matter</div></div>
+      <div class="pm"><div class="pm-n">$0</div><div class="pm-l">Successful Daubert challenges on Oracli-prepared experts</div></div>
+    </div>
+    <div class="testi-grid">
+      <div class="testi rv">
+        <div class="testi-mark">&ldquo;</div>
+        <div class="testi-q">We had a 47-deposition prior testimony record on our expert that we simply could not read in full. Oracli found three positions that opposing counsel had already marked for cross. We were ready. They were not expecting that.</div>
+        <div class="testi-author"><div class="testi-ava">MR</div><div><div class="testi-name">M. Rhodes</div><div class="testi-role">Senior Litigation Partner, Am Law 75 firm</div></div></div>
+      </div>
+      <div class="testi rv d1">
+        <div class="testi-mark">&ldquo;</div>
+        <div class="testi-q">As a forensic economist who testifies in twenty to thirty matters per year, I cannot manually track every position I have ever taken. Oracli's Conflict Scan caught two potential impeachment conflicts before I was even retained. That is irreplaceable.</div>
+        <div class="testi-author"><div class="testi-ava">DK</div><div><div class="testi-name">D. Kaur, Ph.D.</div><div class="testi-role">Forensic Economist, Independent Practice</div></div></div>
+      </div>
+      <div class="testi rv d2">
+        <div class="testi-mark">&ldquo;</div>
+        <div class="testi-q">The Opposing Expert Intelligence module changed how our attorneys prepare to depose adverse experts. We go into the room knowing which of their own published papers contradicts their methodology in this matter. It is an entirely different posture.</div>
+        <div class="testi-author"><div class="testi-ava">TN</div><div><div class="testi-name">T. Nakamura</div><div class="testi-role">Head of Complex Litigation, Regional Litigation Boutique</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" class="sec" style="background:var(--surface)">
+  <div class="wrap">
+    <div class="sec-label rv" style="justify-content:center"><span class="sl-num">07</span><div class="sl-line"></div><span class="sl-text">Pricing</span></div>
+    <div class="price-head rv">
+      <h2 class="sec-h">Priced for the matter,<br>or the <em>practice.</em></h2>
+      <p class="sec-p">Every tier is designed to return its cost on the first matter in which a contradiction is found before opposing counsel does.</p>
+    </div>
+    <div class="price-grid rv">
+      <div class="price-card">
+        <div class="pt">
+          <div class="p-tier">Per-Matter</div>
+          <div class="p-name">Matter Access</div>
+          <div class="p-price">$8K&ndash;$40K <span>/ matter</span></div>
+          <div class="p-desc">Scaled by document volume and matter duration. No long-term commitment required.</div>
+        </div>
+        <div class="pb">
+          <ul class="p-feats">
+            <li><span class="ck">&#x2713;</span> Full Case Knowledge Base Builder</li>
+            <li><span class="ck">&#x2713;</span> Contradiction Engine (unlimited scans)</li>
+            <li><span class="ck">&#x2713;</span> Deposition Simulation (3 scenarios)</li>
+            <li><span class="ck">&#x2713;</span> Report Defensibility Scorer</li>
+            <li><span class="ck">&#x2713;</span> Opposing Expert Intelligence</li>
+            <li><span class="ck">&#x2713;</span> SOC 2 Type II compliant data isolation</li>
+          </ul>
+          <a href="#cta-sec" class="p-cta p-cta-ghost">Request Matter Access</a>
+        </div>
+      </div>
+      <div class="price-card feat">
+        <div class="pt">
+          <div class="p-tier">Expert Seat</div>
+          <div class="p-name">Expert License</div>
+          <div class="p-price">$2.4K&ndash;$9.6K <span>/ year</span></div>
+          <div class="p-desc">Per expert witness. Scales with prior testimony volume and annual matter load.</div>
+        </div>
+        <div class="pb">
+          <ul class="p-feats">
+            <li><span class="ck">&#x2713;</span> Personal Testimony Vault (unlimited cases)</li>
+            <li><span class="ck">&#x2713;</span> Conflict Scan (unlimited runs)</li>
+            <li><span class="ck">&#x2713;</span> Personal Position Map</li>
+            <li><span class="ck">&#x2713;</span> All Matter Access features included</li>
+            <li><span class="ck">&#x2713;</span> Portable across any retaining firm</li>
+            <li><span class="ck">&#x2713;</span> HIPAA-compliant for medical experts</li>
+          </ul>
+          <a href="#cta-sec" class="p-cta p-cta-gold">Get Expert License</a>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="pt">
+          <div class="p-tier">Enterprise</div>
+          <div class="p-name">Firm License</div>
+          <div class="p-price">Custom</div>
+          <div class="p-desc">For Am Law 50 firms and expert management companies. All matters, all experts, unlimited seats.</div>
+        </div>
+        <div class="pb">
+          <ul class="p-feats">
+            <li><span class="ck">&#x2713;</span> Unlimited matters and expert seats</li>
+            <li><span class="ck">&#x2713;</span> iManage / NetDocuments integration</li>
+            <li><span class="ck">&#x2713;</span> On-premise deployment option</li>
+            <li><span class="ck">&#x2713;</span> Partner-level portfolio dashboards</li>
+            <li><span class="ck">&#x2713;</span> Dedicated CSM and implementation</li>
+            <li><span class="ck">&#x2713;</span> Custom domain expert model training</li>
+          </ul>
+          <a href="#cta-sec" class="p-cta p-cta-ghost">Talk to Sales</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="team" class="sec">
+  <div class="wrap">
+    <div class="sec-label rv"><span class="sl-num">08</span><div class="sl-line"></div><span class="sl-text">Founder</span></div>
+    <h2 class="sec-h rv">Built by someone who<br>understood the <em>cost of failure.</em></h2>
+    <div class="team-layout">
+      <div>
+        <div class="team-quote rv">"Litigation support has been transformed by technology at every layer &mdash; discovery, research, brief writing. Expert witness preparation remained untouched. Not because it's unimportant, but because it's hard. We built Oracli to do the hard thing."</div>
+        <p class="team-body rv d1">Oracli was founded after observing a recurring pattern across complex litigation: expert witnesses with irreproachable credentials, dismantled under cross-examination not because their opinions were wrong &mdash; but because preparation left known vulnerabilities unaddressed. Prior testimony they hadn't reviewed. A paper they had authored that opposing counsel had read more carefully than they had. A document buried on page 187,000 of a 300,000-page production.</p>
+        <p class="team-body rv d2">The legal industry's willingness to invest $2M in expert fees while spending two hours on preparation represented a structural failure that intelligence technology could close. Oracli was built to close it &mdash; not as a general-purpose legal AI, but as a purpose-built reasoning environment that understands exactly what an expert witness is, what their exposure is, and where they are most vulnerable before opposing counsel finds out first.</p>
+        <p class="team-body rv d3" style="color:var(--muted);font-size:14px;margin-top:4px;font-family:var(--mono)">Headquartered in New York, NY &nbsp;&middot;&nbsp; Founded 2023</p>
+      </div>
+      <div>
+        <div class="founder-card rv">
+          <div class="founder-ava">AJ</div>
+          <div class="founder-name">Akshat Jaimini</div>
+          <div class="founder-title">Founder &amp; Chief Executive Officer</div>
+          <div class="founder-bio">Akshat brings a rare intersection of litigation technology and AI systems expertise to Oracli. With deep experience in legal data infrastructure and applied machine learning, he identified the expert witness preparation gap as one of the last high-value, high-stakes workflows in complex litigation left entirely unserved by modern intelligence tools. Before founding Oracli, Akshat worked across legal technology ventures and enterprise AI deployments, developing a precise understanding of where AI reasoning creates durable advantage &mdash; and where it fails. He built Oracli's core architecture to be as defensible as the expert witnesses it prepares: every claim cited, every contradiction explained, every output auditable by a senior attorney.</div>
+          <div class="founder-links">
+            <a href="#" class="flink">LinkedIn</a>
+            <a href="#" class="flink">Contact</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cta-sec">
+  <div class="wrap">
+    <div class="cta-inner">
+      <div class="sec-label rv" style="justify-content:center"><span class="sl-num">09</span><div class="sl-line"></div><span class="sl-text">Get Started</span></div>
+      <h2 class="cta-h rv">Your expert is about to be<br>deposed. <em>Is Oracli running?</em></h2>
+      <p class="cta-sub rv d1">Request access for your next matter. No long-term commitment. Full case knowledge base live within 24 hours of document upload.</p>
+      <div class="cta-btns rv d2">
+        <a href="mailto:hello@oracli.ai" class="btn-p">Request Access <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="mailto:hello@oracli.ai" class="btn-s">Talk to Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="ft">
+      <div>
+        <div class="f-logo">Oracl<span>i</span></div>
+        <div class="f-tag">Expert witness intelligence platform for complex litigation. Every contradiction found before opposing counsel does.</div>
+        <div class="f-contact">hello@oracli.ai &nbsp;&middot;&nbsp; +1 (212) 555 0194<br>641 Lexington Ave, New York, NY 10022</div>
+      </div>
+      <div>
+        <div class="fn-title">Platform</div>
+        <ul class="fn-links">
+          <li><a href="#capabilities">Case Knowledge Base</a></li>
+          <li><a href="#capabilities">Contradiction Engine</a></li>
+          <li><a href="#capabilities">Deposition Simulator</a></li>
+          <li><a href="#capabilities">Testimony Vault</a></li>
+          <li><a href="#capabilities">Opposing Expert Intel</a></li>
+          <li><a href="#capabilities">Defensibility Scorer</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="fn-title">Company</div>
+        <ul class="fn-links">
+          <li><a href="#team">About</a></li>
+          <li><a href="#team">Founder</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#proof">Case Studies</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="fn-title">Legal</div>
+        <ul class="fn-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">SOC 2 Report</a></li>
+          <li><a href="#">Data Processing</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fb">
+      <div class="f-copy">&copy; 2025 Oracli, Inc. All rights reserved.</div>
+      <div class="f-badges"><div class="f-badge">SOC 2 Type II</div><div class="f-badge">HIPAA</div><div class="f-badge">AES-256</div></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── NAV ──────────────────────────────────────────── */
+window.addEventListener('scroll', function() {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 30);
+});
+
+/* ── SCROLL REVEAL ────────────────────────────────── */
+var revObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) { e.target.classList.add('vis'); revObs.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.rv').forEach(function(el) { revObs.observe(el); });
+
+/* ── STAT COUNTERS (FIX 2: correct data-dec attribute) ── */
+function animateCounter(el) {
+  var target = parseFloat(el.getAttribute('data-t'));
+  var dec    = parseInt(el.getAttribute('data-dec') || '0', 10);
+  var dur    = 2000;
+  var start  = null;
+  function step(ts) {
+    if (!start) start = ts;
+    var p    = Math.min((ts - start) / dur, 1);
+    var ease = 1 - Math.pow(1 - p, 3);
+    var val  = target * ease;
+    el.textContent = dec > 0 ? val.toFixed(dec) : Math.floor(val).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = dec > 0 ? target.toFixed(dec) : target.toLocaleString();
+  }
+  requestAnimationFrame(step);
+}
+var statObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.cnt').forEach(animateCounter);
+      statObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+statObs.observe(document.getElementById('stats'));
+
+/* ── HERO CANVAS (FIX 1: defer until window load so offsetWidth is real) ── */
+window.addEventListener('load', function() {
+  var canvas = document.getElementById('hero-canvas');
+  if (!canvas || canvas.offsetWidth === 0) return;
+  var ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = canvas.offsetWidth  * devicePixelRatio;
+    canvas.height = canvas.offsetHeight * devicePixelRatio;
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+  }
+  resize();
+  window.addEventListener('resize', function() { resize(); });
+
+  var W = function() { return canvas.offsetWidth;  };
+  var H = function() { return canvas.offsetHeight; };
+
+  var labels = ['Expert Report','Prior Dep. 2021','OSHA Reg. 29 CFR','Exhibit 31','Published Study 2019','Dr. Russo Report','Discovery Doc 847','Internal Memo','IARC Monograph 100F','Deposition Tr. 247'];
+  var types  = ['report','prior','reg','exhibit','study','opposing','doc','memo','ref','dep'];
+  var nodes  = [];
+
+  for (var i = 0; i < 10; i++) {
+    var angle  = (i / 10) * Math.PI * 2;
+    var radius = 130 + Math.random() * 60;
+    nodes.push({
+      x: W() / 2 + Math.cos(angle) * radius,
+      y: H() / 2 + Math.sin(angle) * radius,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: 5 + Math.random() * 4,
+      label: labels[i], type: types[i],
+      pulse: Math.random() * Math.PI * 2
+    });
+  }
+
+  var edges = [[0,1,'contra'],[0,4,'contra'],[1,5,'contra'],[2,6,'supports'],[3,7,'cites'],[4,8,'cites'],[0,2,'supports'],[5,9,'cites'],[1,3,'contradicts'],[6,9,'supports']];
+  var t = 0;
+
+  function draw() {
+    var w = W(), h = H();
+    ctx.clearRect(0, 0, w, h);
+    t += 0.012;
+
+    nodes.forEach(function(n) {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 50 || n.x > w - 50) n.vx *= -1;
+      if (n.y < 50 || n.y > h - 50) n.vy *= -1;
+      n.pulse += 0.03;
+    });
+
+    ctx.save();
+    edges.forEach(function(e) {
+      var na = nodes[e[0]], nb = nodes[e[1]], type = e[2];
+      var grad = ctx.createLinearGradient(na.x, na.y, nb.x, nb.y);
+      if (type === 'contra' || type === 'contradicts') {
+        grad.addColorStop(0, 'rgba(196,74,42,0.55)'); grad.addColorStop(1, 'rgba(196,74,42,0.1)');
+      } else if (type === 'supports') {
+        grad.addColorStop(0, 'rgba(39,146,103,0.45)'); grad.addColorStop(1, 'rgba(39,146,103,0.08)');
+      } else {
+        grad.addColorStop(0, 'rgba(56,104,175,0.4)'); grad.addColorStop(1, 'rgba(56,104,175,0.06)');
+      }
+      ctx.beginPath();
+      ctx.setLineDash([6, 5]);
+      ctx.lineDashOffset = -t * 8;
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = (type === 'contra' || type === 'contradicts') ? 1.5 : 1;
+      ctx.moveTo(na.x, na.y);
+      ctx.lineTo(nb.x, nb.y);
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+    ctx.restore();
+
+    nodes.forEach(function(n) {
+      var pulse = Math.sin(n.pulse) * 0.4 + 0.6;
+      var color;
+      if (n.type === 'report')   color = 'rgba(186,148,60,0.92)';
+      else if (n.type === 'prior' || n.type === 'dep') color = 'rgba(196,74,42,' + pulse + ')';
+      else if (n.type === 'opposing') color = 'rgba(196,74,42,0.7)';
+      else if (n.type === 'study' || n.type === 'ref') color = 'rgba(39,146,103,' + pulse + ')';
+      else color = 'rgba(56,104,175,' + pulse + ')';
+
+      var grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 3.5);
+      grd.addColorStop(0, color.replace(/[\d.]+\)$/, '0.22)'));
+      grd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r * 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = grd; ctx.fill();
+
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = color; ctx.fill();
+
+      ctx.font = "500 10px 'DM Sans', sans-serif";
+      ctx.fillStyle = 'rgba(122,142,176,0.82)';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.label, n.x, n.y + n.r + 14);
+    });
+
+    var leg = [['Contradiction',196,74,42],['Supports',39,146,103],['Cites',56,104,175]];
+    var lx = 16, ly = h - 36;
+    ctx.font = "500 10px 'DM Sans', sans-serif";
+    leg.forEach(function(item) {
+      ctx.beginPath(); ctx.arc(lx + 5, ly + 5, 4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + item[1] + ',' + item[2] + ',' + item[3] + ',0.9)'; ctx.fill();
+      ctx.fillStyle = 'rgba(122,142,176,0.7)'; ctx.textAlign = 'left';
+      ctx.fillText(item[0], lx + 14, ly + 9);
+      lx += ctx.measureText(item[0]).width + 30;
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+});
+
+/* ── TAB SWITCHING ────────────────────────────────── */
+function switchTab(name, btn) {
+  document.querySelectorAll('.dtab').forEach(function(b) { b.classList.remove('on'); });
+  document.querySelectorAll('.dpanel').forEach(function(p) { p.classList.remove('on'); });
+  btn.classList.add('on');
+  document.getElementById('tab-' + name).classList.add('on');
+  if (name === 'dash') { setTimeout(function() { initDash(); }, 80); }
+  if (name === 'contra') { setTimeout(runAnalysis, 400); }
+  if (name === 'dep') { renderDep(); }
+}
+
+/* ── CONTRADICTION ENGINE ─────────────────────────── */
+var contradictions = [
+  {
+    sev: 'HIGH', sevClass: 'sv-h',
+    title: 'Prior Testimony -- Threshold Inconsistency',
+    src: 'Harmon v. Pfizer Corp. -- Weston Dep. Tr. 247:12-18 -- October 2021',
+    quote: '"In cases involving occupational benzene exposure, I have consistently held that concentrations at or above 40 ppm sustained for four months or longer present a statistically meaningful causal pathway to hematological malignancy in the working-age population..."',
+    cross: 'Q: Dr. Weston, in 2021 you stated 40 ppm for four months was causally significant. Today you have told this jury that 50 ppm for six months is the threshold. Which is it?'
+  },
+  {
+    sev: 'HIGH', sevClass: 'sv-h',
+    title: "Expert's Published Work -- Dose-Response Conflict",
+    src: 'Weston, P.L. (2019). "Occupational Benzene Exposure: Revised Dose-Response Thresholds." J. Occup. Med. 61(8): 441-449.',
+    quote: '"Using a linear no-threshold extrapolation model, this analysis found statistically elevated AML risk at cumulative exposures exceeding 8 ppm-years, equivalent to approximately 40 ppm over 2-3 months of sustained daily exposure in the target population..."',
+    cross: "Q: Dr. Weston, this is your own paper from 2019. You published that 40 ppm over two to three months carries elevated risk. Does your opinion in this case contradict your own published research?"
+  }
+];
+
+var analysisRun = false;
+function runAnalysis() {
+  analysisRun = true;
+  var contrasEl = document.getElementById('d-contras');
+  var countEl   = document.getElementById('d-count');
+  var statusEl  = document.getElementById('d-status-txt');
+  if (!contrasEl) return;
+
+  contrasEl.innerHTML = '<div style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:20px 0;display:flex;align-items:center;gap:10px"><div class="d-sdot"></div>Analyzing 247,382 documents across 14 sources...</div>';
+  countEl.textContent  = 'Scanning...';
+  countEl.style.color  = '';
+  statusEl.textContent = 'Analyzing knowledge graph -- cross-referencing prior testimony vault...';
+
+  setTimeout(function() {
+    statusEl.textContent = 'Cross-referencing published works and expert prior positions...';
+  }, 900);
+
+  setTimeout(function() {
+    countEl.textContent = '2 Flagged';
+    countEl.style.color = 'var(--red)';
+    statusEl.textContent = 'Analysis complete -- 247,382 documents scanned -- 2 high-severity contradictions surfaced';
+    contrasEl.innerHTML = '';
+    contradictions.forEach(function(c, idx) {
+      var div = document.createElement('div');
+      div.className = 'contra-card';
+      div.innerHTML =
+        '<div class="contra-hdr">' +
+          '<div style="font-size:13px;font-weight:600;color:var(--text);line-height:1.3">' + c.title + '</div>' +
+          '<div class="sev-badge ' + c.sevClass + '">' + c.sev + '</div>' +
+        '</div>' +
+        '<div class="contra-src">' + c.src + '</div>' +
+        '<div class="contra-quote">' + c.quote + '</div>' +
+        '<div class="cross-box"><div class="cross-lbl">Anticipated Cross-Examination</div><div class="cross-txt">' + c.cross + '</div></div>';
+      contrasEl.appendChild(div);
+      setTimeout(function() { div.classList.add('vis'); }, 120 + idx * 280);
+    });
+  }, 1900);
+}
+setTimeout(runAnalysis, 700);
+
+/* ── DEPOSITION SIMULATOR ─────────────────────────── */
+var depData = [
+  {
+    q: 'Dr. Weston, you testified in your report that exposure below 50 ppm for less than six months does not cause the hematological injury pattern you have attributed to my client\'s facility. Is that correct?',
+    a: 'That is correct. My opinion is grounded in the epidemiological literature and is consistent with my clinical experience in occupational medicine cases involving benzene exposure.',
+    scores: [
+      {lbl:'Consistency with Record', val:62, col:'var(--gold)'},
+      {lbl:'Scope Compliance',        val:88, col:'var(--green)'},
+      {lbl:'Overstatement Risk',      val:22, col:'var(--green)'},
+      {lbl:'Impeachment Exposure',    val:74, col:'var(--red)'}
+    ],
+    suggest: 'This answer will trigger the prior testimony impeachment sequence. In Harmon v. Pfizer (2021), you stated a 40 ppm threshold was causally significant -- exactly what Caldwell will deploy next. Consider qualifying with the specific population cohort and exposure duration parameters before confirming.'
+  },
+  {
+    q: 'Doctor, I am going to show you what has been marked Exhibit 112 -- a transcript from your deposition in Harmon versus Pfizer, October 2021. You stated at page 247, line 12: concentrations at or above 40 parts per million for four months presented a meaningful causal pathway. Does that refresh your recollection?',
+    a: 'I would want to review the full context of that testimony before commenting. The specific population cohort and study design matter significantly to how that statement should be read.',
+    scores: [
+      {lbl:'Consistency with Record', val:55, col:'var(--red)'},
+      {lbl:'Scope Compliance',        val:82, col:'var(--green)'},
+      {lbl:'Overstatement Risk',      val:18, col:'var(--green)'},
+      {lbl:'Impeachment Exposure',    val:81, col:'var(--red)'}
+    ],
+    suggest: 'The request to "review full context" is defensible but Caldwell will read the surrounding transcript aloud. Your 2021 testimony at 247:12 uses language nearly identical to what is at issue in this report. Oracli recommends acknowledging the testimony and distinguishing the population definition explicitly before opposition reads it aloud.'
+  },
+  {
+    q: 'And are you aware that you published a paper in the Journal of Occupational Medicine in 2019 in which you found statistically elevated AML risk at cumulative exposures equivalent to 40 ppm over two to three months of sustained exposure?',
+    a: 'I authored that paper, yes. The methodology in that study used a different exposure model and a different population definition than the analysis in this case.',
+    scores: [
+      {lbl:'Consistency with Record', val:71, col:'var(--gold)'},
+      {lbl:'Scope Compliance',        val:90, col:'var(--green)'},
+      {lbl:'Overstatement Risk',      val:20, col:'var(--green)'},
+      {lbl:'Impeachment Exposure',    val:58, col:'var(--gold)'}
+    ],
+    suggest: 'This is the strongest answer in the sequence. Distinguishing exposure models is scientifically defensible and shifts burden back to opposing counsel. Oracli recommends pre-emptively naming the specific methodological distinction -- linear no-threshold versus categorical threshold models -- before Caldwell can characterize the difference as inconsistency.'
+  },
+  {
+    q: 'So your opinion today is that 50 ppm for six months is the threshold -- different from the 40 ppm for four months in your prior testimony -- and different again from the 40 ppm for two to three months in your published paper. Is Meridian\'s facility the first time you have used this particular threshold?',
+    a: 'Each opinion is developed specific to the facts of the case before me, the relevant scientific literature at the time, and the exposure parameters established in the record. The threshold I have expressed in this matter is grounded in the most current evidence and the specific occupational setting.',
+    scores: [
+      {lbl:'Consistency with Record', val:78, col:'var(--green)'},
+      {lbl:'Scope Compliance',        val:85, col:'var(--green)'},
+      {lbl:'Overstatement Risk',      val:24, col:'var(--green)'},
+      {lbl:'Impeachment Exposure',    val:42, col:'var(--gold)'}
+    ],
+    suggest: 'Significant improvement in impeachment exposure. The case-specific framing effectively neutralizes the inconsistency pattern without conceding error. Oracli risk score for this answer: 4.1 / 10. This is a defensible closing position for this line of cross-examination.'
+  }
+];
+var depIdx = 0;
+
+function renderDep() {
+  var d = depData[depIdx];
+  document.getElementById('dep-qnum').textContent = depIdx + 1;
+  document.getElementById('dep-q').textContent     = d.q;
+  document.getElementById('dep-a').textContent     = d.a;
+  document.getElementById('dep-suggest').textContent = d.suggest;
+
+  var scoresEl = document.getElementById('dep-scores');
+  scoresEl.innerHTML = '';
+
+  /* FIX 4: Build rows first, append all, then animate -- avoids race condition */
+  var fills = [];
+  d.scores.forEach(function(s) {
+    var row  = document.createElement('div');
+    row.className = 'dscore-row';
+    var fill = document.createElement('div');
+    fill.className = 'dscore-fill';
+    fill.style.background = s.col;
+    fill.style.width = '0%';
+    row.innerHTML =
+      '<div class="dscore-lbl">' + s.lbl + ' <span>' + s.val + '%</span></div>' +
+      '<div class="dscore-bar"></div>';
+    row.querySelector('.dscore-bar').appendChild(fill);
+    scoresEl.appendChild(row);
+    fills.push({ el: fill, val: s.val });
+  });
+
+  /* Animate after all rows are in the DOM */
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      fills.forEach(function(f, i) {
+        setTimeout(function() { f.el.style.width = f.val + '%'; }, i * 90);
+      });
+    });
+  });
+}
+
+function nextDep() {
+  depIdx = (depIdx + 1) % depData.length;
+  renderDep();
+}
+renderDep();
+
+/* ── DASHBOARD (FIX 3: counter observer wired on init, not tab switch) ── */
+var dashInited = false;
+function initDash() {
+  if (dashInited) return;
+  dashInited = true;
+
+  /* Animate counters directly -- no observer needed here */
+  document.querySelectorAll('.dcount').forEach(function(el) {
+    var target = parseInt(el.getAttribute('data-t'), 10);
+    var start  = null;
+    function step(ts) {
+      if (!start) start = ts;
+      var p    = Math.min((ts - start) / 1800, 1);
+      var ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(target * ease).toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target.toLocaleString();
+    }
+    requestAnimationFrame(step);
+  });
+
+  /* Animate risk pin */
+  setTimeout(function() {
+    var pin = document.getElementById('risk-pin');
+    if (pin) pin.style.left = '72%';
+  }, 300);
+
+  /* Draw knowledge graph */
+  drawKG();
+}
+
+/* ── KNOWLEDGE GRAPH ──────────────────────────────── */
+function drawKG() {
+  var c = document.getElementById('kg-canvas');
+  if (!c || c.offsetWidth === 0) return;
+  c.width  = c.offsetWidth  * devicePixelRatio;
+  c.height = c.offsetHeight * devicePixelRatio;
+  var ctx = c.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  var W = c.offsetWidth, H = c.offsetHeight;
+
+  var kgNodes = [
+    {x:W*.50,y:H*.45,r:7,  col:'rgba(186,148,60,.92)', lbl:'Expert Report'},
+    {x:W*.22,y:H*.28,r:5.5,col:'rgba(196,74,42,.85)',  lbl:'Prior Dep. 2021'},
+    {x:W*.78,y:H*.28,r:5,  col:'rgba(196,74,42,.75)',  lbl:'Published 2019'},
+    {x:W*.15,y:H*.65,r:4.5,col:'rgba(56,104,175,.80)', lbl:'OSHA Reg.'},
+    {x:W*.50,y:H*.82,r:4.5,col:'rgba(56,104,175,.80)', lbl:'Exhibit 31'},
+    {x:W*.85,y:H*.65,r:5,  col:'rgba(196,74,42,.75)',  lbl:'Russo Report'},
+    {x:W*.35,y:H*.18,r:4,  col:'rgba(39,146,103,.80)', lbl:'IARC 100F'},
+    {x:W*.65,y:H*.18,r:4,  col:'rgba(39,146,103,.75)', lbl:'EPA IRIS 2014'}
+  ];
+  var kgEdges = [[0,1,'contra'],[0,2,'contra'],[0,3,'supports'],[0,4,'cites'],[0,5,'contra'],[1,6,'cites'],[2,7,'cites'],[3,4,'supports'],[5,7,'cites']];
+
+  kgEdges.forEach(function(e) {
+    var na = kgNodes[e[0]], nb = kgNodes[e[1]], type = e[2];
+    ctx.beginPath();
+    ctx.moveTo(na.x, na.y);
+    ctx.lineTo(nb.x, nb.y);
+    ctx.strokeStyle = type === 'contra' ? 'rgba(196,74,42,.28)' : type === 'supports' ? 'rgba(39,146,103,.22)' : 'rgba(56,104,175,.18)';
+    ctx.lineWidth = type === 'contra' ? 1.5 : 1;
+    ctx.stroke();
+  });
+
+  kgNodes.forEach(function(n) {
+    var g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 3);
+    g.addColorStop(0, n.col.replace(/[\d.]+\)$/, '0.18)'));
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.r * 3, 0, Math.PI * 2);
+    ctx.fillStyle = g; ctx.fill();
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = n.col; ctx.fill();
+    ctx.font = "10px 'DM Sans', sans-serif";
+    ctx.fillStyle = 'rgba(122,142,176,.78)';
+    ctx.textAlign = 'center';
+    ctx.fillText(n.lbl, n.x, n.y + n.r + 12);
+  });
+}
+</script>
+</body>
+</html>
